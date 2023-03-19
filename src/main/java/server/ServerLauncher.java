@@ -1,5 +1,8 @@
 package server;
 
+import java.io.Console;
+import java.util.Scanner;
+
 public class ServerLauncher {
     public final static int PORT = 1337;
 
@@ -8,7 +11,9 @@ public class ServerLauncher {
         try {
             server = new Server(PORT);
             System.out.println("Server is running...");
+            server.handleLoadCourses("Hiver");
             server.run();
+
         } catch (Exception e) {
             e.printStackTrace();
         }

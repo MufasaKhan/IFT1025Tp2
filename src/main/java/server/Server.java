@@ -2,13 +2,12 @@ package server;
 
 import javafx.util.Pair;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
 
 public class Server {
 
@@ -91,6 +90,25 @@ public class Server {
      @throws Exception si une erreur se produit lors de la lecture du fichier ou de l'écriture de l'objet dans le flux
      */
     public void handleLoadCourses(String arg) {
+        String cheminCours = "src/main/java/server/data/cours.txt";
+        try {
+            FileReader fr = new FileReader(cheminCours);
+            Scanner ligne = new Scanner(fr);
+            while(ligne.hasNextLine()) {
+                String s = ligne.nextLine();
+                String[] mot = s.split("\\s+");
+                String session = mot[mot.length -1];
+                if(session.equals(arg)){
+                    System.out.println(s);
+                }
+
+
+            }
+            ligne.close();
+        }catch (IOException e){
+            System.out.println("Erreur lors de la lecture");
+        }
+
         // TODO: implémenter cette méthode
     }
 
@@ -100,6 +118,8 @@ public class Server {
      @throws Exception si une erreur se produit lors de la lecture de l'objet, l'écriture dans un fichier ou dans le flux de sortie.
      */
     public void handleRegistration() {
+
+        System.out.println("Your");
         // TODO: implémenter cette méthode
     }
 }
