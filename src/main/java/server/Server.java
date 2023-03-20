@@ -1,6 +1,7 @@
 package server;
 
 import javafx.util.Pair;
+import server.models.Course;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -91,15 +92,21 @@ public class Server {
      */
     public void handleLoadCourses(String arg) {
         String cheminCours = "src/main/java/server/data/cours.txt";
+        String code,session,nom;
+        String[] sessions = {"Automne","Hiver","Ete"};
         try {
             FileReader fr = new FileReader(cheminCours);
             Scanner ligne = new Scanner(fr);
             while(ligne.hasNextLine()) {
                 String s = ligne.nextLine();
                 String[] mot = s.split("\\s+");
-                String session = mot[mot.length -1];
+                session = sessions[Integer.valueOf(arg)];
+
+                 code = mot[mot.length -2];
+                 nom = mot[mot.length-3];
                 if(session.equals(arg)){
-                    System.out.println(s);
+                  Course course = new Course(nom,code,session);
+                  System.out.println(course.toString());
                 }
 
 
