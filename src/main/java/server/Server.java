@@ -92,25 +92,26 @@ public class Server {
      */
     public void handleLoadCourses(String arg) {
         String cheminCours = "src/main/java/server/data/cours.txt";
-        String code,session,nom;
-        String[] sessions = {"Automne","Hiver","Ete"};
+        String code,sessionChoisis,nom,sessionCours;
+        String[] sessions = {" ","Automne","Hiver","Ete"};
+        sessionChoisis = sessions[Integer.valueOf(arg)];
+        ArrayList<Course> courseList = new ArrayList<Course>();
         try {
             FileReader fr = new FileReader(cheminCours);
             Scanner ligne = new Scanner(fr);
             while(ligne.hasNextLine()) {
                 String s = ligne.nextLine();
                 String[] mot = s.split("\\s+");
-                session = sessions[Integer.valueOf(arg)];
-
+                sessionCours = mot[mot.length - 1];
                  code = mot[mot.length -2];
                  nom = mot[mot.length-3];
-                if(session.equals(arg)){
-                  Course course = new Course(nom,code,session);
-                  System.out.println(course.toString());
+                if(sessionChoisis.equals(sessionCours)){
+                  Course course = new Course(nom,code,sessionChoisis);
+                  courseList.add(course);
                 }
 
-
             }
+            System.out.println(courseList);
             ligne.close();
         }catch (IOException e){
             System.out.println("Erreur lors de la lecture");
