@@ -96,9 +96,11 @@ public class Server {
         String[] sessions = {" ","Automne","Hiver","Ete"};
         sessionChoisis = sessions[Integer.valueOf(arg)];
         ArrayList<Course> courseList = new ArrayList<Course>();
+
         try {
-            FileReader fr = new FileReader(cheminCours);
-            Scanner ligne = new Scanner(fr);
+
+            Scanner ligne = new Scanner(new FileInputStream(cheminCours));
+
             while(ligne.hasNextLine()) {
                 String s = ligne.nextLine();
                 String[] mot = s.split("\\s+");
@@ -109,12 +111,11 @@ public class Server {
                   Course course = new Course(nom,code,sessionChoisis);
                   courseList.add(course);
                 }
-
             }
             System.out.println(courseList);
             ligne.close();
-        }catch (IOException e){
-            System.out.println("Erreur lors de la lecture");
+        }catch (FileNotFoundException e){
+            throw new RuntimeException("Erreur lors de l'ouverture du fichier",e);
         }
 
         // TODO: implémenter cette méthode
