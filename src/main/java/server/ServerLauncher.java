@@ -17,7 +17,6 @@ public class ServerLauncher {
             String cours = s.nextLine();
             int valeur = Integer.parseInt(cours);
             if(!(valeur >= 1 && valeur <= 3)) throw new IllegalArgumentException("Votre choix n'est pas dans la liste");
-
             System.out.println("Server is running...");
             server.handleLoadCourses(cours);
             server.run();
