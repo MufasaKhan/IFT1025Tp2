@@ -43,8 +43,9 @@ public class Server {
                 System.out.println("Connecté au client: " + client);
                 objectInputStream = new ObjectInputStream(client.getInputStream());
                 objectOutputStream = new ObjectOutputStream(client.getOutputStream());
+                String received = (String) objectInputStream.readObject();;
+                handleLoadCourses(received);
                 listen();
-                handleLoadCourses("1");
                 disconnect();
                 System.out.println("Client déconnecté!");
             } catch (Exception e) {
@@ -115,8 +116,11 @@ public class Server {
                     courseList.add(course);
                 }
                 objectOutputStream.writeObject(courseList);
-                System.out.println(objectOutputStream);
+
+
             }
+            System.out.println(courseList);
+
             ligne.close();
         }catch (IOException e){
             throw new RuntimeException("Erreur lors de l'ouverture du fichier",e);
