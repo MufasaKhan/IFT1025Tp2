@@ -44,6 +44,7 @@ public class Server {
                 objectInputStream = new ObjectInputStream(client.getInputStream());
                 objectOutputStream = new ObjectOutputStream(client.getOutputStream());
                 listen();
+                handleLoadCourses("1");
                 disconnect();
                 System.out.println("Client déconnecté!");
             } catch (Exception e) {
@@ -54,10 +55,12 @@ public class Server {
 
     public void listen() throws IOException, ClassNotFoundException {
         String line;
+
         if ((line = this.objectInputStream.readObject().toString()) != null) {
             Pair<String, String> parts = processCommandLine(line);
             String cmd = parts.getKey();
             String arg = parts.getValue();
+
             this.alertHandlers(cmd, arg);
         }
     }
@@ -97,29 +100,33 @@ public class Server {
         sessionChoisis = sessions[Integer.valueOf(arg)];
         ArrayList<Course> courseList = new ArrayList<Course>();
 
-        try {
-
+        try  {
+            objectOutputStream.writeObject("Hello");
+            objectOutputStream.flush();
             Scanner ligne = new Scanner(new FileInputStream(cheminCours));
-
             while(ligne.hasNextLine()) {
                 String s = ligne.nextLine();
                 String[] mot = s.split("\\s+");
                 sessionCours = mot[mot.length - 1];
-                 code = mot[mot.length -2];
-                 nom = mot[mot.length-3];
+                code = mot[mot.length -2];
+                nom = mot[mot.length-3];
                 if(sessionChoisis.equals(sessionCours)){
-                  Course course = new Course(nom,code,sessionChoisis);
-                  courseList.add(course);
+                    Course course = new Course(nom,code,sessionChoisis);
+                    courseList.add(course);
                 }
+                objectOutputStream.writeObject(courseList);
+                System.out.println(objectOutputStream);
             }
-            System.out.println(courseList);
             ligne.close();
-        }catch (FileNotFoundException e){
+        }catch (IOException e){
             throw new RuntimeException("Erreur lors de l'ouverture du fichier",e);
         }
 
         // TODO: implémenter cette méthode
     }
+
+        // TODO: implémenter cette méthode
+
 
     /**
      Récupérer l'objet 'RegistrationForm' envoyé par le client en utilisant 'objectInputStream', l'enregistrer dans un fichier texte
@@ -127,7 +134,6 @@ public class Server {
      @throws Exception si une erreur se produit lors de la lecture de l'objet, l'écriture dans un fichier ou dans le flux de sortie.
      */
     public void handleRegistration() {
-
         System.out.println("Your");
         // TODO: implémenter cette méthode
     }
