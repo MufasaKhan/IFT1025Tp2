@@ -18,12 +18,13 @@ public class ServerLauncher {
             System.out.println(" 1. Automne \n 2. Hiver \n 3. Ete");
             ObjectOutputStream outputStream = new ObjectOutputStream(client.getOutputStream());
             Scanner scanner = new Scanner(System.in);
+            System.out.print("> Choix: ");
             String message = scanner.nextLine();
-            System.out.println("> Choix: " + message);
             int valeur = Integer.parseInt(message);
             if(!(valeur >= 1 && valeur <= 3)) throw new IllegalArgumentException("Votre choix n'est pas dans la liste");
             outputStream.writeObject(message);
             outputStream.flush();
+            server.handleLoadCourses(message);
             System.out.println("Server is running...");
             server.run();
 

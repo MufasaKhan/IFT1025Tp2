@@ -44,7 +44,6 @@ public class Server {
                 objectInputStream = new ObjectInputStream(client.getInputStream());
                 objectOutputStream = new ObjectOutputStream(client.getOutputStream());
                 String received = (String) objectInputStream.readObject();;
-                handleLoadCourses(received);
                 listen();
                 disconnect();
                 System.out.println("Client déconnecté!");
@@ -101,9 +100,11 @@ public class Server {
         sessionChoisis = sessions[Integer.valueOf(arg)];
         ArrayList<Course> courseList = new ArrayList<Course>();
 
+
         try  {
-            objectOutputStream.writeObject("Hello");
-            objectOutputStream.flush();
+            client = server.accept();
+            objectInputStream = new ObjectInputStream(client.getInputStream());
+            objectOutputStream = new ObjectOutputStream(client.getOutputStream());
             Scanner ligne = new Scanner(new FileInputStream(cheminCours));
             while(ligne.hasNextLine()) {
                 String s = ligne.nextLine();
@@ -116,6 +117,7 @@ public class Server {
                     courseList.add(course);
                 }
                 objectOutputStream.writeObject(courseList);
+                objectOutputStream.flush();
 
 
             }
@@ -126,10 +128,10 @@ public class Server {
             throw new RuntimeException("Erreur lors de l'ouverture du fichier",e);
         }
 
-        // TODO: implémenter cette méthode
+
     }
 
-        // TODO: implémenter cette méthode
+
 
 
     /**
