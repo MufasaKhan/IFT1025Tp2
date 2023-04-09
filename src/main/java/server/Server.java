@@ -2,6 +2,7 @@ package server;
 
 import javafx.util.Pair;
 import server.models.Course;
+import server.models.RegistrationForm;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -41,9 +42,6 @@ public class Server {
             try {
                 client = server.accept();
                 System.out.println("Connecté au client: " + client);
-                objectInputStream = new ObjectInputStream(client.getInputStream());
-                objectOutputStream = new ObjectOutputStream(client.getOutputStream());
-                String received = (String) objectInputStream.readObject();;
                 listen();
                 disconnect();
                 System.out.println("Client déconnecté!");
@@ -55,12 +53,10 @@ public class Server {
 
     public void listen() throws IOException, ClassNotFoundException {
         String line;
-
         if ((line = this.objectInputStream.readObject().toString()) != null) {
             Pair<String, String> parts = processCommandLine(line);
             String cmd = parts.getKey();
             String arg = parts.getValue();
-
             this.alertHandlers(cmd, arg);
         }
     }
@@ -93,12 +89,13 @@ public class Server {
      @param arg la session pour laquelle on veut récupérer la liste des cours
      @throws Exception si une erreur se produit lors de la lecture du fichier ou de l'écriture de l'objet dans le flux
      */
+    ArrayList<Course> courseList = new ArrayList<Course>();
     public void handleLoadCourses(String arg) {
         String cheminCours = "src/main/java/server/data/cours.txt";
         String code,sessionChoisis,nom,sessionCours;
         String[] sessions = {" ","Automne","Hiver","Ete"};
         sessionChoisis = sessions[Integer.valueOf(arg)];
-        ArrayList<Course> courseList = new ArrayList<Course>();
+
 
 
         try  {
@@ -106,24 +103,30 @@ public class Server {
             objectInputStream = new ObjectInputStream(client.getInputStream());
             objectOutputStream = new ObjectOutputStream(client.getOutputStream());
             Scanner ligne = new Scanner(new FileInputStream(cheminCours));
+            System.out.println("Les cours offerts pendant la session " + sessionChoisis + " sont :");
+            int compteur = 1;
             while(ligne.hasNextLine()) {
                 String s = ligne.nextLine();
                 String[] mot = s.split("\\s+");
                 sessionCours = mot[mot.length - 1];
-                code = mot[mot.length -2];
-                nom = mot[mot.length-3];
+                code = mot[mot.length -3];
+                nom = mot[mot.length-2];
                 if(sessionChoisis.equals(sessionCours)){
                     Course course = new Course(nom,code,sessionChoisis);
                     courseList.add(course);
+                    System.out.println(compteur + ". " + nom + " "  + code);
+                    compteur += 1;
                 }
                 objectOutputStream.writeObject(courseList);
                 objectOutputStream.flush();
 
 
+
             }
-            System.out.println(courseList);
+
 
             ligne.close();
+            handleRegistration();
         }catch (IOException e){
             throw new RuntimeException("Erreur lors de l'ouverture du fichier",e);
         }
@@ -140,7 +143,30 @@ public class Server {
      @throws Exception si une erreur se produit lors de la lecture de l'objet, l'écriture dans un fichier ou dans le flux de sortie.
      */
     public void handleRegistration() {
-        System.out.println("Your");
+        Scanner inscription = new Scanner(System.in);
+
+        System.out.print("Veuillez saisir votre prénom: ");
+        String prenom = inscription.next();
+        System.out.print("Veuillez saisir votre nom: ");
+        String nom = inscription.next();
+        System.out.print("Veuillez saisir votre email: ");
+        String email = inscription.next();
+        System.out.print("Veuillez saisir votre matricule: ");
+        String matricule  = inscription.next();
+        System.out.print("Veuillez saisir le code du cours: ");
+        String coursChoix = inscription.next();
+        Course choix = null;
+        for(Course course: courseList ){
+            if (course.getCode().contains(coursChoix)){
+                choix = course;
+            }
+        }
+        RegistrationForm registrationForm = new RegistrationForm(prenom,nom,email,matricule,choix);
+
+
+
+
+        System.out.println(registrationForm.toString());
         // TODO: implémenter cette méthode
     }
 }
