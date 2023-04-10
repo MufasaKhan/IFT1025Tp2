@@ -103,11 +103,13 @@ public class Server {
         int valeur = Integer.parseInt(arg);
         if(!(valeur >= 1 && valeur <= 3)) throw new IllegalArgumentException("Votre choix n'est pas dans la liste");
 
-        String cheminCours = "src/main/java/server/data/cours.txt";
+        String cheminCours = "/cours.txt";
         String code,sessionChoisis,nom,sessionCours;
         String[] sessions = {" ","Automne","Hiver","Ete"};
         sessionChoisis = sessions[Integer.valueOf(arg)];
-            Scanner ligne = new Scanner(new FileInputStream(cheminCours));
+
+            InputStream inputStream = getClass().getResourceAsStream(cheminCours);
+            Scanner ligne = new Scanner(inputStream);
             System.out.println("Les cours offerts pendant la session " + sessionChoisis + " sont :");
             int compteur = 1;
             while(ligne.hasNextLine()) {
