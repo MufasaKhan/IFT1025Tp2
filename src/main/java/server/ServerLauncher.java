@@ -19,7 +19,7 @@ public class ServerLauncher {
             outputStream.writeObject(commande);
             outputStream.flush();
             System.out.println("Server is running...");
-            server.run();
+            server.run() ;
 
 
 
