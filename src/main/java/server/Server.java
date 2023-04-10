@@ -42,6 +42,8 @@ public class Server {
             try {
                 client = server.accept();
                 System.out.println("Connecté au client: " + client);
+                objectInputStream = new ObjectInputStream(client.getInputStream());
+                objectOutputStream = new ObjectOutputStream(client.getOutputStream());
                 listen();
                 disconnect();
                 System.out.println("Client déconnecté!");
@@ -91,17 +93,20 @@ public class Server {
      */
     ArrayList<Course> courseList = new ArrayList<Course>();
     public void handleLoadCourses(String arg) {
+        try{
+        System.out.println("*** Bienvenue au portail d'inscription de l'UDEM ***");
+        System.out.println("Veuillez choisir la session pour laquelle vous voulez consulter la liste de cours :");
+        System.out.println(" 1. Automne \n 2. Hiver \n 3. Ete");
+        System.out.print("> Choix: ");
+        Scanner scanner = new Scanner(System.in);
+        arg = scanner.nextLine();
+        int valeur = Integer.parseInt(arg);
+        if(!(valeur >= 1 && valeur <= 3)) throw new IllegalArgumentException("Votre choix n'est pas dans la liste");
+
         String cheminCours = "src/main/java/server/data/cours.txt";
         String code,sessionChoisis,nom,sessionCours;
         String[] sessions = {" ","Automne","Hiver","Ete"};
         sessionChoisis = sessions[Integer.valueOf(arg)];
-
-
-
-        try  {
-            client = server.accept();
-            objectInputStream = new ObjectInputStream(client.getInputStream());
-            objectOutputStream = new ObjectOutputStream(client.getOutputStream());
             Scanner ligne = new Scanner(new FileInputStream(cheminCours));
             System.out.println("Les cours offerts pendant la session " + sessionChoisis + " sont :");
             int compteur = 1;
@@ -120,13 +125,11 @@ public class Server {
                 objectOutputStream.writeObject(courseList);
                 objectOutputStream.flush();
 
-
-
             }
 
 
             ligne.close();
-            handleRegistration();
+
         }catch (IOException e){
             throw new RuntimeException("Erreur lors de l'ouverture du fichier",e);
         }
@@ -144,7 +147,6 @@ public class Server {
      */
     public void handleRegistration() {
         Scanner inscription = new Scanner(System.in);
-
         System.out.print("Veuillez saisir votre prénom: ");
         String prenom = inscription.next();
         System.out.print("Veuillez saisir votre nom: ");
@@ -159,6 +161,9 @@ public class Server {
         for(Course course: courseList ){
             if (course.getCode().contains(coursChoix)){
                 choix = course;
+            }else{
+                System.out.println("Le cours ne fait pas partie de la liste.");
+
             }
         }
         RegistrationForm registrationForm = new RegistrationForm(prenom,nom,email,matricule,choix);
@@ -169,5 +174,6 @@ public class Server {
         System.out.println(registrationForm.toString());
         // TODO: implémenter cette méthode
     }
+
 }
 

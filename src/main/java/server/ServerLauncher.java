@@ -13,18 +13,11 @@ public class ServerLauncher {
         try {
             server = new Server(PORT);
             Socket client = new Socket("127.0.0.1",PORT);
-            System.out.println("*** Bienvenue au portail d'inscription de l'UDEM ***");
-            System.out.println("Veuillez choisir la session pour laquelle vous voulez consulter la liste de cours :");
-            System.out.println(" 1. Automne \n 2. Hiver \n 3. Ete");
             ObjectOutputStream outputStream = new ObjectOutputStream(client.getOutputStream());
             Scanner scanner = new Scanner(System.in);
-            System.out.print("> Choix: ");
-            String message = scanner.nextLine();
-            int valeur = Integer.parseInt(message);
-            if(!(valeur >= 1 && valeur <= 3)) throw new IllegalArgumentException("Votre choix n'est pas dans la liste");
-            outputStream.writeObject(message);
+            String commande = scanner.nextLine();
+            outputStream.writeObject(commande);
             outputStream.flush();
-            server.handleLoadCourses(message);
             System.out.println("Server is running...");
             server.run();
 
