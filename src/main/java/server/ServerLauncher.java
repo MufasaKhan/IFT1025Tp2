@@ -17,9 +17,9 @@ public class ServerLauncher {
             Scanner scanner = new Scanner(System.in);
             String commande = scanner.nextLine();
             outputStream.writeObject(commande);
-            outputStream.flush();
             System.out.println("Server is running...");
-            server.run() ;
+            server.run();
+
 
 
 
