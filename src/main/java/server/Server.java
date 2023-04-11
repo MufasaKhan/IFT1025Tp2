@@ -98,14 +98,14 @@ public class Server {
 
     public void handleLoadCourses(String arg) {
         try {
-            ArrayList<Course> courseList = new ArrayList<>();
+            ArrayList<Course> courseList = new ArrayList<Course>();
             arg = "";
-            System.out.println("*** Bienvenue au portail d'inscription de l'UDEM ***");
-            System.out.println("Veuillez choisir la session pour laquelle vous voulez consulter la liste de cours :");
-            System.out.println(" 1. Automne \n 2. Hiver \n 3. Ete");
-            System.out.print("> Choix: ");
-            Scanner scanner = new Scanner(System.in);
-            arg = scanner.nextLine();
+            PrintWriter output = new PrintWriter(objectOutputStream,true);
+            output.println("*** Bienvenue au portail d'inscription de l'UDEM ***");
+            output.println("Veuillez choisir la session pour laquelle vous voulez consulter la liste de cours :");
+            output.println(" 1. Automne \n 2. Hiver \n 3. Ete");
+            output.println("");
+            arg = objectInputStream.readObject().toString();
             int valeur = Integer.parseInt(arg);
             if (!(valeur >= 1 && valeur <= 3))
                 throw new IllegalArgumentException("Votre choix n'est pas dans la liste");
@@ -113,10 +113,9 @@ public class Server {
             String code, sessionChoisis, nom, sessionCours;
             String[] sessions = {" ", "Automne", "Hiver", "Ete"};
             sessionChoisis = sessions[Integer.valueOf(arg)];
-
             InputStream inputStream = getClass().getResourceAsStream(cheminCours);
             Scanner ligne = new Scanner(inputStream);
-            System.out.println("Les cours offerts pendant la session " + sessionChoisis + " sont :");
+            output.println("Les cours offerts pendant la session " + sessionChoisis + " sont :");
             int compteur = 1;
             while (ligne.hasNextLine()) {
                 String s = ligne.nextLine();
@@ -127,25 +126,14 @@ public class Server {
                 if (sessionChoisis.equals(sessionCours)) {
                     Course course = new Course(nom, code, sessionChoisis);
                     courseList.add(course);
-                    System.out.println(compteur + ". " + nom + " " + code);
+                    output.println(compteur + ". " + nom + " " + code);
+                    output.flush();
                     compteur += 1;
                 }
-
             }
+            output.println("1. Consulter les cours offerts pour une autre session \n2. Inscription a un cours");
+            output.println("");
 
-            objectOutputStream.writeObject(courseList);
-            objectOutputStream.flush();
-            System.out.println("1. Consulter les cours offerts pour une autre session \n " +
-                    "2. Inscription a un cours");
-            System.out.print("> choix: ");
-            valeur = scanner.nextInt();
-            if (!(valeur == 1 | valeur == 2)) throw new IllegalArgumentException("Choix invalide");
-            else if (valeur == 1) {
-                handleLoadCourses(arg);
-                courseList.clear();
-            } else if (valeur == 2) {
-                handleRegistration();
-            }
 
 
         } catch (Exception e) {
