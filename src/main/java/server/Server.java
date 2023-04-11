@@ -98,7 +98,7 @@ public class Server {
 
     public void handleLoadCourses(String arg) {
         try {
-            ArrayList<Course> courseList = new ArrayList<Course>();
+            ArrayList<Course> courseList = new ArrayList<>();
             arg = "";
             System.out.println("*** Bienvenue au portail d'inscription de l'UDEM ***");
             System.out.println("Veuillez choisir la session pour laquelle vous voulez consulter la liste de cours :");
@@ -132,6 +132,9 @@ public class Server {
                 }
 
             }
+
+            objectOutputStream.writeObject(courseList);
+            objectOutputStream.flush();
             System.out.println("1. Consulter les cours offerts pour une autre session \n " +
                     "2. Inscription a un cours");
             System.out.print("> choix: ");
@@ -143,6 +146,7 @@ public class Server {
             } else if (valeur == 2) {
                 handleRegistration();
             }
+
 
         } catch (Exception e) {
             e.printStackTrace();
