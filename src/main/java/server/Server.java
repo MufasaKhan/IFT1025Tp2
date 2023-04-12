@@ -100,11 +100,7 @@ public class Server {
         try {
             ArrayList<Course> courseList = new ArrayList<Course>();
             arg = "";
-            PrintWriter output = new PrintWriter(objectOutputStream,true);
-            output.println("*** Bienvenue au portail d'inscription de l'UDEM ***");
-            output.println("Veuillez choisir la session pour laquelle vous voulez consulter la liste de cours :");
-            output.println(" 1. Automne \n 2. Hiver \n 3. Ete");
-            output.println("");
+
             arg = objectInputStream.readObject().toString();
             int valeur = Integer.parseInt(arg);
             if (!(valeur >= 1 && valeur <= 3))
@@ -115,7 +111,7 @@ public class Server {
             sessionChoisis = sessions[Integer.valueOf(arg)];
             InputStream inputStream = getClass().getResourceAsStream(cheminCours);
             Scanner ligne = new Scanner(inputStream);
-            output.println("Les cours offerts pendant la session " + sessionChoisis + " sont :");
+            System.out.println("Les cours offerts pendant la session " + sessionChoisis + " sont :");
             int compteur = 1;
             while (ligne.hasNextLine()) {
                 String s = ligne.nextLine();
@@ -126,17 +122,15 @@ public class Server {
                 if (sessionChoisis.equals(sessionCours)) {
                     Course course = new Course(nom, code, sessionChoisis);
                     courseList.add(course);
-                    output.println(compteur + ". " + nom + " " + code);
-                    output.flush();
+                    System.out.println(compteur + ". " + nom + " " + code);
+
                     compteur += 1;
                 }
-
             }
-
-            output.println("1. Consulter les cours offerts pour une autre session \n2. Inscription a un cours");
-            output.println("");
-            objectOutputStream.writeObject(courseList.toString());
+             System.out.println("1. Consulter les cours offerts pour une autre session \n2. Inscription a un cours");
+            objectOutputStream.writeObject(courseList);
             objectOutputStream.flush();
+            courseList.clear();
         } catch (Exception e) {
             e.printStackTrace();
         }
