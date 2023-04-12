@@ -2,6 +2,7 @@ package server;
 
 import javafx.util.Pair;
 import server.models.Course;
+import server.models.RegistrationForm;
 
 
 import java.io.*;
@@ -100,6 +101,7 @@ public class Server {
         try {
             ArrayList<Course> courseList = new ArrayList<Course>();
             arg = "";
+            courseList.clear();
 
             arg = objectInputStream.readObject().toString();
             int valeur = Integer.parseInt(arg);
@@ -112,7 +114,6 @@ public class Server {
             InputStream inputStream = getClass().getResourceAsStream(cheminCours);
             Scanner ligne = new Scanner(inputStream);
             System.out.println("Les cours offerts pendant la session " + sessionChoisis + " sont :");
-            int compteur = 1;
             while (ligne.hasNextLine()) {
                 String s = ligne.nextLine();
                 String[] mot = s.split("\\s+");
@@ -122,12 +123,10 @@ public class Server {
                 if (sessionChoisis.equals(sessionCours)) {
                     Course course = new Course(nom, code, sessionChoisis);
                     courseList.add(course);
-                    System.out.println(compteur + ". " + nom + " " + code);
 
-                    compteur += 1;
                 }
             }
-             System.out.println("1. Consulter les cours offerts pour une autre session \n2. Inscription a un cours");
+
             objectOutputStream.writeObject(courseList);
             objectOutputStream.flush();
             courseList.clear();
@@ -146,6 +145,11 @@ public class Server {
      */
     public void handleRegistration() {
         try {
+            Object formeRecu = objectInputStream.readObject();
+            System.out.println(formeRecu.toString());
+            String m = "message recu";
+            objectOutputStream.writeObject(m);
+
 
 
 

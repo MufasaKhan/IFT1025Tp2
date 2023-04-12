@@ -17,14 +17,15 @@ public class Client {
         String commande = scanner.nextLine();
         String choix = "";
         String session = "";
-
+        String operation = "";
+        ArrayList<Course> receivedObjectList = new ArrayList<>();
 
         while (true) {
             try {
                 Socket client = new Socket("127.0.0.1", 1337);
                 ObjectOutputStream outputStream = new ObjectOutputStream(client.getOutputStream());
                 ObjectInputStream inputStream = new ObjectInputStream(client.getInputStream());
-                ArrayList<Course> receivedObjectList = new ArrayList<>();
+
                 while(true) {
                     if (choix.equals("1") || commande.equals("CHARGER")) {
                         commande = "CHARGER";
@@ -37,12 +38,14 @@ public class Client {
                         outputStream.writeObject(session);
                         outputStream.flush();
                         commande ="";
+                        operation = "CHARGER";
                         receivedObjectList.clear();
                         break;
 
 
                     } else if (choix.equals("2") || commande.equals("INSCRIRE")) {
                         commande = "INSCRIRE";
+
                         Scanner inscription = new Scanner(System.in);
                         System.out.print("Veuillez saisir votre prénom: ");
                         String prenom = inscription.nextLine();
@@ -55,17 +58,36 @@ public class Client {
                         System.out.print("Veuillez saisir le code du cours: ");
                         String coursChoix = inscription.nextLine();
                         Course cours = null;
-                        RegistrationForm registrationForm = new RegistrationForm(prenom, nom, email, matricule, cours);
-                        registrationForm.toString();
+                        for (Course cour : receivedObjectList) {
+                            if (cour.getCode().equals(coursChoix)) {
+                                cours = cour;
+
+                            }
+                        }
+                        RegistrationForm registrationForm = new RegistrationForm(prenom,nom,email,matricule,cours);
+                        System.out.println(registrationForm.toString());
+                        outputStream.writeObject(commande);
+                        outputStream.writeObject(registrationForm);
+                        outputStream.flush();
+                        commande ="";
+                        choix = "";
+                        operation = "INSCRIRE";
+                        break;
 
                     }
                 }
 
-
-                         receivedObjectList = (ArrayList<Course>) inputStream.readObject();
-                        for (Course obj : receivedObjectList) {
-                            System.out.println(obj.toString());
-                    }
+                        if(operation.equals("CHARGER")) {
+                            receivedObjectList = (ArrayList<Course>) inputStream.readObject();
+                            for (Course obj : receivedObjectList) {
+                                System.out.println(obj.toString());
+                                operation = "";
+                            }
+                        }else if (operation.equals("INSCRIRE")) {
+                            String message = inputStream.readObject().toString();
+                            System.out.println(message);
+                            operation = "";
+                        }
 
 
                 System.out.println("1. Consulter les cours offerts pour une autre session \n2. Inscription a un cours");
