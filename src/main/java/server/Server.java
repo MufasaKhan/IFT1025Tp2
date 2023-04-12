@@ -130,17 +130,16 @@ public class Server {
                     output.flush();
                     compteur += 1;
                 }
+
             }
+
             output.println("1. Consulter les cours offerts pour une autre session \n2. Inscription a un cours");
             output.println("");
-
-
-
+            objectOutputStream.writeObject(courseList.toString());
+            objectOutputStream.flush();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
 
@@ -153,18 +152,7 @@ public class Server {
      */
     public void handleRegistration() {
         try {
-            Scanner inscription = new Scanner(System.in);
-            System.out.print("Veuillez saisir votre prénom: ");
-            String prenom = inscription.next();
-            System.out.print("Veuillez saisir votre nom: ");
-            String nom = inscription.next();
-            System.out.print("Veuillez saisir votre email: ");
-            String email = inscription.next();
-            System.out.print("Veuillez saisir votre matricule: ");
-            String matricule = inscription.next();
-            System.out.print("Veuillez saisir le code du cours: ");
-            String coursChoix = inscription.next();
-            Course choix = null;
+
 
 
         } catch (Exception e) {
