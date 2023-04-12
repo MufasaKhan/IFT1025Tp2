@@ -97,6 +97,7 @@ public class Client {
 
 
             } catch (IOException e) {
+                System.out.println("Erreur lors de la lecture du fichier");
                 e.printStackTrace();
 
             } catch

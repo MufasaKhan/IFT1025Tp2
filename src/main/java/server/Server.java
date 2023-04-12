@@ -107,12 +107,14 @@ public class Server {
             int valeur = Integer.parseInt(arg);
             if (!(valeur >= 1 && valeur <= 3))
                 throw new IllegalArgumentException("Votre choix n'est pas dans la liste");
-            String cheminCours = "/cours.txt";
             String code, sessionChoisis, nom, sessionCours;
             String[] sessions = {" ", "Automne", "Hiver", "Ete"};
             sessionChoisis = sessions[Integer.valueOf(arg)];
-            InputStream inputStream = getClass().getResourceAsStream(cheminCours);
-            Scanner ligne = new Scanner(inputStream);
+            // recherche le chemin du jar
+            String jarPath = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent();
+            File file = new File(jarPath + File.separator + "cours.txt");
+            Scanner ligne = new Scanner(new InputStreamReader(new FileInputStream(file)));
+
             while (ligne.hasNextLine()) {
                 String s = ligne.nextLine();
                 String[] mot = s.split("\\s+");
@@ -145,19 +147,17 @@ public class Server {
     public void handleRegistration() {
         try {
 
-
             Object formeRecu = objectInputStream.readObject();
             System.out.println(formeRecu.toString());
             String m = "message recu";
             objectOutputStream.writeObject(m);
 
 
-            String filePath = getClass().getClassLoader().getResource("inscription.txt").getPath();
-            System.out.println("File path: " + filePath);
-            File outputFile = new File(filePath);
-            FileWriter writer = new FileWriter(outputFile);
+            String jarPath = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent();
+            File file = new File(jarPath + File.separator + "inscription.txt");
+            FileWriter writer = new FileWriter(file);
             PrintWriter pw = new PrintWriter(writer);
-            pw.println("helloh");
+            pw.println("hello You");
             pw.close();
             writer.close();
 
