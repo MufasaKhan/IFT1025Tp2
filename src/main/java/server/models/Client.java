@@ -76,9 +76,9 @@ public class Client {
 
                     }
                 }
-
                         if(operation.equals("CHARGER")) {
                             receivedObjectList = (ArrayList<Course>) inputStream.readObject();
+                            System.out.println("Les cours offerts sont :");
                             for (Course obj : receivedObjectList) {
                                 System.out.println(obj.toString());
                                 operation = "";
@@ -97,6 +97,7 @@ public class Client {
 
 
             } catch (IOException e) {
+                e.printStackTrace();
 
             } catch
             (ClassNotFoundException e) {

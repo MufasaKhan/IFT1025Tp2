@@ -113,7 +113,6 @@ public class Server {
             sessionChoisis = sessions[Integer.valueOf(arg)];
             InputStream inputStream = getClass().getResourceAsStream(cheminCours);
             Scanner ligne = new Scanner(inputStream);
-            System.out.println("Les cours offerts pendant la session " + sessionChoisis + " sont :");
             while (ligne.hasNextLine()) {
                 String s = ligne.nextLine();
                 String[] mot = s.split("\\s+");
@@ -145,10 +144,24 @@ public class Server {
      */
     public void handleRegistration() {
         try {
+
+
             Object formeRecu = objectInputStream.readObject();
             System.out.println(formeRecu.toString());
             String m = "message recu";
             objectOutputStream.writeObject(m);
+
+
+            String filePath = getClass().getClassLoader().getResource("inscription.txt").getPath();
+            System.out.println("File path: " + filePath);
+            File outputFile = new File(filePath);
+            FileWriter writer = new FileWriter(outputFile);
+            PrintWriter pw = new PrintWriter(writer);
+            pw.println("helloh");
+            pw.close();
+            writer.close();
+
+
 
 
 
