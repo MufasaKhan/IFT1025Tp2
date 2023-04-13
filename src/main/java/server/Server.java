@@ -99,6 +99,7 @@ public class Server {
 
     public void handleLoadCourses(String arg) {
         try {
+            System.out.println("Recu");
             ArrayList<Course> courseList = new ArrayList<Course>();
             arg = "";
             courseList.clear();
