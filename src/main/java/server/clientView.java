@@ -1,18 +1,20 @@
 package server;
 
+import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import server.models.Course;
 
-import java.io.ObjectOutputStream;
-import java.net.Socket;
+import java.util.ArrayList;
+
 
 public class clientView {
     private final int SCENE_WIDTH = 500;
@@ -24,11 +26,20 @@ public class clientView {
     private final StackPane root = new StackPane();
     private final Button charger = new Button("Charger");
     private final ChoiceBox<String> sessions = new ChoiceBox<>();
-    private final TableView<Course> tableView = new TableView<>();
+    private final TableView<Course> tableView = new TableView<Course>();
+    private ArrayList<Course> listCours;
 
     private final Text fomulaire = new Text("Formulaire d'inscription");
 
     public clientView() {
+
+        TableColumn<Course, String> codeCol = new TableColumn<>("Code");
+        TableColumn<Course, String> coursCol = new TableColumn<>("Cours");
+        codeCol.setCellValueFactory(new PropertyValueFactory<>("code"));
+        coursCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        tableView.getColumns().addAll(codeCol,coursCol);
+
+
 
         charger.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -36,6 +47,10 @@ public class clientView {
                 System.out.println("Clicked");
                     int choix = sessions.getSelectionModel().getSelectedIndex() + 1;
                     controleur.charger(Integer.toString(choix));
+                    listCours = controleur.getListCours();
+                tableView.setItems(FXCollections.observableArrayList(listCours));
+
+
 
 
             }
@@ -44,11 +59,9 @@ public class clientView {
         tableView.setMaxHeight(300);
         tableView.setTranslateX(-100);
         tableView.setTranslateY(-60);
-        TableColumn<Course, String> code = new TableColumn<>("Code");
-        TableColumn<Course, String> cours = new TableColumn<>("Cours");
-        code.setMaxWidth(150);
+        codeCol.setMaxWidth(150);
 
-        tableView.getColumns().addAll(code,cours);
+
         sessions.getItems().addAll("Automne", "Hiver", "Ete");
         sessions.setValue("Automne");
         sessions.setTranslateX(-100);
@@ -62,6 +75,11 @@ public class clientView {
 
 
     }
+    public void updateCours (ArrayList<Course> cours){
+        tableView.setItems(FXCollections.observableArrayList(cours));
+
+    }
+
     public Scene getScene(){
         return scene;
     }

@@ -113,6 +113,7 @@ public class Server {
             sessionChoisis = sessions[Integer.valueOf(arg)];
             // recherche le chemin du jar
             String jarPath = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent();
+
             File file = new File(jarPath + File.separator + "cours.txt");
             Scanner ligne = new Scanner(new InputStreamReader(new FileInputStream(file)));
 
@@ -128,6 +129,7 @@ public class Server {
 
                 }
             }
+            System.out.println(courseList);
 
             objectOutputStream.writeObject(courseList);
             objectOutputStream.flush();
