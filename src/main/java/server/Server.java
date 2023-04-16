@@ -99,7 +99,7 @@ public class Server {
 
     public void handleLoadCourses(String arg) {
         try {
-            System.out.println("Recu");
+
             ArrayList<Course> courseList = new ArrayList<Course>();
             arg = "";
             courseList.clear();
@@ -129,7 +129,6 @@ public class Server {
 
                 }
             }
-            System.out.println(courseList);
 
             objectOutputStream.writeObject(courseList);
             objectOutputStream.flush();
@@ -149,18 +148,15 @@ public class Server {
      */
     public void handleRegistration() {
         try {
-
             Object formeRecu = objectInputStream.readObject();
-            System.out.println(formeRecu.toString());
-            String m = "message recu";
-            objectOutputStream.writeObject(m);
+
 
 
             String jarPath = new File(getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getParent();
             File file = new File(jarPath + File.separator + "inscription.txt");
             FileWriter writer = new FileWriter(file);
             PrintWriter pw = new PrintWriter(writer);
-            pw.println("hello You");
+            pw.println(formeRecu);
             pw.close();
             writer.close();
 

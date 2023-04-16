@@ -61,4 +61,19 @@ public class RegistrationForm implements Serializable {
     public String toString() {
         return "InscriptionForm{" + "prenom='" + prenom + '\'' + ", nom='" + nom + '\'' + ", email='" + email + '\'' + ", matricule='" + matricule + '\'' + ", course='" + course + '\'' + '}';
     }
+    public boolean verifierForme(String prenom,String nom,String email, String matricule, Course course){
+        if(prenom.isEmpty() || nom.isEmpty()){
+            System.out.println("Nom ou prenom vide");
+            return false;
+        }
+        if(!email.matches("[\\w.]+@[\\w.]+\\.\\w+")){
+            System.out.println("email invalide");
+            return false;
+        }
+        if(course == null){
+            System.out.println("Vous n'avez pas selectionne un cour");
+            return false;
+        }
+        return true;
+    }
 }

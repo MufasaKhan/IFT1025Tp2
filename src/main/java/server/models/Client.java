@@ -26,7 +26,7 @@ public class Client {
                 ObjectOutputStream outputStream = new ObjectOutputStream(client.getOutputStream());
                 ObjectInputStream inputStream = new ObjectInputStream(client.getInputStream());
 
-                while(true) {
+                 while(true) {
                     if (choix.equals("1") || commande.equals("CHARGER")) {
                         commande = "CHARGER";
                         System.out.println("*** Bienvenue au portail d'inscription de l'UDEM ***");
@@ -45,7 +45,6 @@ public class Client {
 
                     } else if (choix.equals("2") || commande.equals("INSCRIRE")) {
                         commande = "INSCRIRE";
-
                         Scanner inscription = new Scanner(System.in);
                         System.out.print("Veuillez saisir votre prénom: ");
                         String prenom = inscription.nextLine();
@@ -65,14 +64,21 @@ public class Client {
                             }
                         }
                         RegistrationForm registrationForm = new RegistrationForm(prenom,nom,email,matricule,cours);
-                        System.out.println(registrationForm.toString());
-                        outputStream.writeObject(commande);
-                        outputStream.writeObject(registrationForm);
-                        outputStream.flush();
-                        commande ="";
-                        choix = "";
-                        operation = "INSCRIRE";
-                        break;
+                        if(registrationForm.verifierForme(prenom,nom,email,matricule,cours)) {
+                            System.out.println(registrationForm.toString());
+                            outputStream.writeObject(commande);
+                            outputStream.writeObject(registrationForm);
+                            outputStream.flush();
+                            commande = "";
+                            choix = "";
+                            operation = "INSCRIRE";
+                        }else{
+
+                            choix = "2";
+
+
+
+                        }
 
                     }
                 }
@@ -111,4 +117,7 @@ public class Client {
 
 
     }
+
+
+
 }

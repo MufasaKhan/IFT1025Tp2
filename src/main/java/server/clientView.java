@@ -9,8 +9,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import server.models.Course;
-import server.models.RegistrationForm;
 
 import java.util.ArrayList;
 
@@ -26,10 +26,11 @@ public class clientView {
     TextField email = new TextField();
     TextField matricule = new TextField();
     VBox informations = new VBox(10);
-    Label pr = new Label("Prenom");
-    Label na = new Label("Nom");
-    Label em = new Label("Email");
-    Label ma = new Label("Matricule");
+    Label prenomLabel = new Label("Prenom");
+    Label nomLabel = new Label("Nom");
+    Label emailLabel = new Label("Email");
+
+    Label matriculeLabel = new Label("Matricule");
 
     private final StackPane root = new StackPane();
     private final Button charger = new Button("Charger");
@@ -66,7 +67,17 @@ public class clientView {
         inscription.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                String pren = prenom.getText();
+                String etudiantPrenom = prenom.getText();
+                String etudiantNom = nom.getText();
+                String edutiantEmail = email.getText();
+                String etudiantMatricule = matricule.getText();
+                Course cours1 = tableView.getSelectionModel().getSelectedItem();
+                if (controleur.verifierForme(etudiantPrenom,etudiantNom,edutiantEmail,etudiantMatricule,cours1)) {
+                    controleur.inscrire(etudiantPrenom, etudiantNom, edutiantEmail, etudiantMatricule, cours1);
+                }else{
+                    System.out.println("Incorrect");
+                }
+
 
             }
         });
@@ -76,15 +87,15 @@ public class clientView {
         tableView.setTranslateY(-60);
         codeCol.setMaxWidth(160);
         coursCol.setMinWidth(160);
-        informations.getChildren().addAll(em,na,pr,prenom,nom,email,matricule,ma);
-        pr.setTranslateX(-50);
-        pr.setTranslateY(30);
-        na.setTranslateY(95);
-        na.setTranslateX(-50);
-        em.setTranslateX(-50);
-        em.setTranslateY(155);
-        ma.setTranslateX(-60);
-        ma.setTranslateY(-30);
+        informations.getChildren().addAll(emailLabel, nomLabel, prenomLabel,prenom,nom,email,matricule, matriculeLabel);
+        prenomLabel.setTranslateX(-50);
+        prenomLabel.setTranslateY(30);
+        nomLabel.setTranslateY(95);
+        nomLabel.setTranslateX(-50);
+        emailLabel.setTranslateX(-50);
+        emailLabel.setTranslateY(155);
+        matriculeLabel.setTranslateX(-60);
+        matriculeLabel.setTranslateY(-30);
         informations.setMaxWidth(120);
         informations.setTranslateX(145);
         informations.setTranslateY(90);

@@ -1,5 +1,6 @@
 package server;
 
+import javafx.scene.control.Alert;
 import server.models.Course;
 import server.models.RegistrationForm;
 
@@ -44,6 +45,40 @@ public class Controleur {
         }
     }
 
+    public void inscrire(String prenom,String nom, String email, String matricule,Course course1 ) {
+        try {
+            String ins = "INSCRIRE";
+            Socket client = new Socket("127.0.0.1", 1337);
+            outputStream = new ObjectOutputStream(client.getOutputStream());
+            inputStream = new ObjectInputStream(client.getInputStream());
+            registrationForm = new RegistrationForm(prenom,nom,email,matricule,course1);
+            outputStream.writeObject(ins);
+            outputStream.writeObject(registrationForm);
+            outputStream.flush();
 
+        }catch (Exception e){
+
+        }
+    }
+    public boolean verifierForme(String prenom,String nom,String email, String matricule, Course course){
+        if(prenom.isEmpty() || nom.isEmpty()){
+            alert("Nom ou prenom vide");
+            return false;
+        }
+        if(!email.matches("[\\w.]+@[\\w.]+\\.\\w+")){
+            alert("email invalide");
+            return false;
+        }
+        if(course == null){
+            alert("Vous n'avez pas selectionne un cour");
+            return false;
+        }
+        return true;
+    }
+    public void alert(String message){
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 
 }
