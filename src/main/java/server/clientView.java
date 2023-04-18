@@ -53,7 +53,6 @@ public class clientView {
         charger.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                System.out.println("Clicked");
                     int choix = sessions.getSelectionModel().getSelectedIndex() + 1;
                     controleur.charger(Integer.toString(choix));
                     listCours = controleur.getListCours();
@@ -72,15 +71,16 @@ public class clientView {
                 String edutiantEmail = email.getText();
                 String etudiantMatricule = matricule.getText();
                 Course cours1 = tableView.getSelectionModel().getSelectedItem();
+                // la methode verifierForme confirme si toute les informations sont bonnes.
                 if (controleur.verifierForme(etudiantPrenom,etudiantNom,edutiantEmail,etudiantMatricule,cours1)) {
                     controleur.inscrire(etudiantPrenom, etudiantNom, edutiantEmail, etudiantMatricule, cours1);
                 }else{
-                    System.out.println("Incorrect");
                 }
 
 
             }
         });
+        // section qui s'occupe de la position des éléments sur l'interface
         tableView.setMaxWidth(220);
         tableView.setMaxHeight(300);
         tableView.setTranslateX(-100);

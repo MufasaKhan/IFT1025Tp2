@@ -19,7 +19,6 @@ public class Client {
         String session = "";
         String operation = "";
         ArrayList<Course> receivedObjectList = new ArrayList<>();
-
         while (true) {
             try {
                 Socket client = new Socket("127.0.0.1", 1337);
@@ -27,7 +26,8 @@ public class Client {
                 ObjectInputStream inputStream = new ObjectInputStream(client.getInputStream());
 
                  while(true) {
-                    if (choix.equals("1") || commande.equals("CHARGER")) {
+
+                    if (choix.equals("1") || commande.equals("CHARGER")) { // traitement de la commande charger
                         commande = "CHARGER";
                         System.out.println("*** Bienvenue au portail d'inscription de l'UDEM ***");
                         System.out.println("Veuillez choisir la session pour laquelle vous voulez consulter la liste de cours :");
@@ -60,25 +60,33 @@ public class Client {
                         for (Course cour : receivedObjectList) {
                             if (cour.getCode().equals(coursChoix)) {
                                 cours = cour;
-
                             }
                         }
                         RegistrationForm registrationForm = new RegistrationForm(prenom,nom,email,matricule,cours);
                         if(registrationForm.verifierForme(prenom,nom,email,matricule,cours)) {
-                            System.out.println(registrationForm.toString());
                             outputStream.writeObject(commande);
                             outputStream.writeObject(registrationForm);
                             outputStream.flush();
+                            String reponse = inputStream.readObject().toString();
+                            System.out.println(reponse);
+                            if (reponse.contains("Erreur")){
+                                receivedObjectList.clear();
+                                break;
+                            }
+
                             commande = "";
                             choix = "";
                             operation = "INSCRIRE";
                         }else{
-
                             choix = "2";
 
 
 
                         }
+
+                    }else{
+                        System.out.println("Entrez un choix valide 1 pour charger les cours ou 2 pour une inscription");
+                        choix = scanner.nextLine();
 
                     }
                 }
@@ -86,8 +94,12 @@ public class Client {
                             receivedObjectList = (ArrayList<Course>) inputStream.readObject();
                             System.out.println("Les cours offerts sont :");
                             for (Course obj : receivedObjectList) {
-                                System.out.println(obj.toString());
+                                System.out.println(obj.getCode() + " " + obj.getName());
                                 operation = "";
+                            }
+                            if(receivedObjectList.isEmpty()){
+                                System.out.println("Aucun cour n'a ete recu, erreur de lecture de fichier");
+
                             }
                         }else if (operation.equals("INSCRIRE")) {
                             String message = inputStream.readObject().toString();
@@ -100,7 +112,6 @@ public class Client {
                 System.out.print(">Choix : ");
                 commande = "";
                 choix = scanner.nextLine();
-
 
             } catch (IOException e) {
                 System.out.println("Erreur lors de la lecture du fichier");
@@ -119,5 +130,8 @@ public class Client {
     }
 
 
+public void erreur(){
+        System.out.println("Erreur lors de l'enregistrement");
 
+}
 }

@@ -74,6 +74,9 @@ public class RegistrationForm implements Serializable {
             System.out.println("Vous n'avez pas selectionne un cour");
             return false;
         }
+        if(!matricule.matches("\\d{6}")){
+            System.out.println("Mauvais format de matricule. Le matricule doit etre composé de 6 chiffres");
+        }
         return true;
     }
 }

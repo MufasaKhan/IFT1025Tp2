@@ -19,6 +19,9 @@ public class Controleur {
     private Course course;
     private ArrayList<Course> listCours;
 
+    /**
+     * Cette classe controle les interactions avec l'interface graphique
+     */
     public Controleur(){
 
     }
@@ -27,7 +30,7 @@ public class Controleur {
         return listCours;
     }
 
-    public void charger(String session){
+    public void charger(String session){ // execution de la commande charger.
 
         try {
             Socket client = new Socket("127.0.0.1", 1337);
@@ -55,11 +58,14 @@ public class Controleur {
             outputStream.writeObject(ins);
             outputStream.writeObject(registrationForm);
             outputStream.flush();
+            String reponse = inputStream.readObject().toString();
+            alert(reponse);
 
         }catch (Exception e){
 
         }
     }
+    // methode qui verifie si toute les informations sont bonnes.
     public boolean verifierForme(String prenom,String nom,String email, String matricule, Course course){
         if(prenom.isEmpty() || nom.isEmpty()){
             alert("Nom ou prenom vide");
@@ -73,10 +79,14 @@ public class Controleur {
             alert("Vous n'avez pas selectionne un cour");
             return false;
         }
+        if(!matricule.matches("\\d{6}")){
+            alert("Matricule doit etre de 6 chiffres");
+            return false;
+        }
         return true;
     }
     public void alert(String message){
-        Alert alert = new Alert(Alert.AlertType.WARNING);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setContentText(message);
         alert.showAndWait();
     }
