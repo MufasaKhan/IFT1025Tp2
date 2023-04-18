@@ -1,0 +1,1 @@
+InscriptionForm{prenom='ER', nom='45', email='10', matricule='1235', course='null'}
